@@ -1,7 +1,13 @@
 import { sequelize } from "@/utils/db";
 import { Film } from "./film";
 import { Rating } from "./rating";
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import {
+  AllowNull,
+  Column,
+  DataType,
+  Model,
+  Table,
+} from "sequelize-typescript";
 
 // export const User = sequelize.define(
 //   "User",
@@ -28,6 +34,12 @@ export class User extends Model {
 
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   username!: string;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  firstName!: string;
+
+  @Column({ type: DataType.STRING })
+  lastName!: string;
 
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   email!: string;

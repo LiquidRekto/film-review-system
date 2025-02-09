@@ -16,7 +16,7 @@ export default defineConfig({
     // For production, a proxy server might be used - example: nginx
     proxy: {
       "/api": {
-        target: process.env.VITE_API_URL,
+        target: "http://localhost:3001",
         changeOrigin: true,
         secure: false,
       },

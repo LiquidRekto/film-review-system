@@ -12,7 +12,7 @@ export class AuthService extends BaseService {
       );
       console.log(response);
       return response;
-    } catch (error: any) {
+    } catch (error) {
       return (error as AxiosError).response;
     }
   }

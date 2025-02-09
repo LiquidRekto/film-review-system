@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   TextField,
   Button,
@@ -7,26 +7,41 @@ import {
   Box,
   Paper,
 } from "@mui/material";
+import { IAccountRegister } from "@/interfaces/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ACCOUNT_REGISTER_SCHEMA } from "@/utils/validation.utils";
+import { useForm } from "react-hook-form";
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState({
+  const [registerData, setRegisterData] = useState<IAccountRegister>({
+    firstName: "",
+    lastName: "",
+    dob: new Date(),
+    phoneNumber: "",
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    resolver: zodResolver(ACCOUNT_REGISTER_SCHEMA),
+    mode: "all",
+  });
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRegisterData({ ...registerData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-    console.log("Form submitted", formData);
+  const handleRegister = () => {
+    if (!isValid) return;
+    console.log("Form submitted", registerData);
   };
 
   return (
@@ -35,45 +50,81 @@ const RegisterPage = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Register
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(handleRegister)}>
           <TextField
+            label="First Name"
             fullWidth
+            margin="normal"
+            {...register("firstName")}
+            onChange={handleChange}
+            error={!!errors.firstName}
+            helperText={errors.firstName?.message?.toString()}
+          />
+          <TextField
+            label="Last Name"
+            fullWidth
+            margin="normal"
+            {...register("lastName")}
+            onChange={handleChange}
+            error={!!errors.lastName}
+            helperText={errors.lastName?.message?.toString()}
+          />
+          <TextField
+            label="Date of Birth"
+            type="date"
+            fullWidth
+            margin="normal"
+            {...register("dob")}
+            onChange={handleChange}
+            error={!!errors.dob}
+            helperText={errors.dob?.message?.toString()}
+          />
+          <TextField
+            label="Phone Number"
+            fullWidth
+            margin="normal"
+            {...register("phoneNumber")}
+            onChange={handleChange}
+            error={!!errors.phoneNumber}
+            helperText={errors.phoneNumber?.message?.toString()}
+          />
+          <TextField
             label="Username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
+            fullWidth
             margin="normal"
-            required
+            {...register("username")}
+            onChange={handleChange}
+            error={!!errors.username}
+            helperText={errors.username?.message?.toString()}
           />
           <TextField
-            fullWidth
             label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
+            fullWidth
             margin="normal"
-            required
+            {...register("email")}
+            onChange={handleChange}
+            error={!!errors.email}
+            helperText={errors.email?.message?.toString()}
           />
           <TextField
-            fullWidth
             label="Password"
-            name="password"
             type="password"
-            value={formData.password}
-            onChange={handleChange}
+            fullWidth
             margin="normal"
-            required
+            {...register("password")}
+            onChange={handleChange}
+            error={!!errors.password}
+            helperText={errors.password?.message?.toString()}
           />
           <TextField
-            fullWidth
             label="Confirm Password"
-            name="confirmPassword"
             type="password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
+            fullWidth
             margin="normal"
-            required
+            {...register("confirmPassword")}
+            onChange={handleChange}
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword?.message?.toString()}
           />
           <Button
             type="submit"
