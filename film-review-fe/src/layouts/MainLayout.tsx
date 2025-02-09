@@ -1,5 +1,19 @@
+import NavBarComponent from "@/components/NavBarComponent";
 import React from "react";
+import { Outlet } from "react-router";
 
-export const MainLayout = () => {
-  return <div>AuthLayout</div>;
+const MainLayout = () => {
+  return (
+    <>
+      <header>
+        <NavBarComponent />
+      </header>
+      <div>
+        <Outlet />
+      </div>
+      <footer></footer>
+    </>
+  );
 };
+
+export default MainLayout;
