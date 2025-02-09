@@ -17,6 +17,7 @@ import { API_R_200 } from "@/constants/error-codes";
 
 const LoginPage = () => {
   const [loginMsg, setLoginMsg] = useState("");
+  const [finishProcess, setFinishProcess] = useState(true);
 
   const {
     register,
@@ -41,10 +42,12 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     if (!isValid) return;
+    setFinishProcess(false);
     const res = (await AuthService.login(loginData)) as AxiosResponse;
     if (res.status !== API_R_200) {
       setLoginMsg("Invalid username or password");
     }
+    setFinishProcess(true);
   };
 
   return (
@@ -88,6 +91,7 @@ const LoginPage = () => {
           />
           <Button
             type="submit"
+            loading={!finishProcess}
             variant="contained"
             color="primary"
             onClick={handleLogin}

@@ -1,3 +1,5 @@
+import { API_R_404 } from "@/constants/res-codes";
+import { APIError } from "@/interfaces/response";
 import { Film } from "@/models/film";
 import { FilmRepository } from "@/repository/film.repository";
 
@@ -16,7 +18,7 @@ export class FilmService {
     const film = this.filmRepository.getFilmById(film_id);
     console.log(film);
     if (!film) {
-      throw new Error("Film not found!");
+      throw new APIError("Film not found!", API_R_404);
     }
 
     return film;

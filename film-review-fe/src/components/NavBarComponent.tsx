@@ -14,6 +14,7 @@ const NavBarComponent = () => {
           <Button color="inherit">Contact</Button>
           <Button color="inherit">Login</Button>
         </Box>
+        <span class="fi fi-vn"></span>
       </Toolbar>
     </AppBar>
   );

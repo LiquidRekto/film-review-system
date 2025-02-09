@@ -1,16 +1,12 @@
 import React, { ChangeEvent, useState } from "react";
-import {
-  TextField,
-  Button,
-  Container,
-  Typography,
-  Box,
-  Paper,
-} from "@mui/material";
+import { TextField, Button, Container, Typography, Paper } from "@mui/material";
 import { IAccountRegister } from "@/interfaces/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ACCOUNT_REGISTER_SCHEMA } from "@/utils/validation.utils";
 import { useForm } from "react-hook-form";
+import { AuthService } from "@/services/auth.service";
+import { AxiosResponse } from "axios";
+import { API_R_200 } from "@/constants/error-codes";
 
 const RegisterPage = () => {
   const [registerData, setRegisterData] = useState<IAccountRegister>({
@@ -24,6 +20,9 @@ const RegisterPage = () => {
     confirmPassword: "",
   });
 
+  const [registerMsg, setRegisterMsg] = useState("");
+  const [finishProcess, setFinishProcess] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -36,12 +35,18 @@ const RegisterPage = () => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    setRegisterMsg("");
     setRegisterData({ ...registerData, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!isValid) return;
-    console.log("Form submitted", registerData);
+    setFinishProcess(false);
+    const res = (await AuthService.register(registerData)) as AxiosResponse;
+    if (res.status !== API_R_200) {
+      setRegisterMsg("An error ocurred during registration, please try again");
+    }
+    setFinishProcess(true);
   };
 
   return (
@@ -49,6 +54,9 @@ const RegisterPage = () => {
       <Paper elevation={3} sx={{ p: 4, mt: 8, textAlign: "center" }}>
         <Typography variant="h4" align="center" gutterBottom>
           Register
+        </Typography>
+        <Typography color="error" align="center" gutterBottom>
+          {registerMsg}
         </Typography>
         <form onSubmit={handleSubmit(handleRegister)}>
           <TextField
@@ -71,6 +79,9 @@ const RegisterPage = () => {
           />
           <TextField
             label="Date of Birth"
+            slotProps={{
+              inputLabel: { shrink: true },
+            }}
             type="date"
             fullWidth
             margin="normal"
@@ -128,6 +139,7 @@ const RegisterPage = () => {
           />
           <Button
             type="submit"
+            loading={!finishProcess}
             variant="contained"
             color="primary"
             fullWidth

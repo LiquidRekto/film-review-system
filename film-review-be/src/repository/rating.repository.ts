@@ -1,13 +1,13 @@
 import { IPageRecords, IRecordFilter } from "@/interfaces/pagination";
-import { Film } from "@/models/film";
+import { Rating } from "@/models/rating";
 import { Op } from "sequelize";
 
-export class FilmRepository {
-  async createFilm(data: Partial<Film>): Promise<Film> {
-    return await Film.create(data);
+export class RatingRepository {
+  async createRating(data: Partial<Rating>): Promise<Rating> {
+    return await Rating.create(data);
   }
 
-  async getAllFilms(filter: IRecordFilter): Promise<IPageRecords<Film>> {
+  async getAllRatings(filter: IRecordFilter): Promise<IPageRecords<Rating>> {
     let filterQuery = {
       title: {},
       director: {},
@@ -26,7 +26,7 @@ export class FilmRepository {
         };
         break;
     }
-    const { count, rows } = await Film.findAndCountAll({
+    const { count, rows } = await Rating.findAndCountAll({
       limit: filter.limit,
       offset: filter.offset,
       order: [[filter.orderBy, filter.order]],
@@ -41,21 +41,21 @@ export class FilmRepository {
     };
   }
 
-  async getFilmById(film_id: number): Promise<Film | null> {
-    return await Film.findByPk(film_id);
+  async getRatingById(film_id: number): Promise<Rating | null> {
+    return await Rating.findByPk(film_id);
   }
 
   //   async getFilmByEmail(email: string): Promise<Film | null> {
   //     return await Film.findOne({ where: { email } });
   //   }
 
-  async updateFilm(film_id: number, data: Partial<Film>): Promise<void> {
-    await Film.update(data, { where: { film_id } });
+  async updateRating(id: number, data: Partial<Rating>): Promise<void> {
+    await Rating.update(data, { where: { id } });
   }
 
-  async deleteFilm(film_id: number): Promise<void> {
-    await Film.destroy({ where: { film_id } });
+  async deleteRating(id: number): Promise<void> {
+    await Rating.destroy({ where: { id } });
   }
 }
 
-export default new FilmRepository();
+export default new RatingRepository();

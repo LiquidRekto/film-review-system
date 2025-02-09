@@ -1,13 +1,15 @@
 //import "@/App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
-import { HomePage } from "@/pages/HomePage";
+import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/auth/LoginPage";
 import { ProtectedRouteComponent } from "@/components/common/ProtectedRouteComponent";
 import { AdminDashboardPage } from "@/pages/admin/AdminDashboardPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
-import MainLayout from "./layouts/MainLayout";
-import AuthLayout from "./layouts/AuthLayout";
-import AdminLayout from "./layouts/AdminLayout";
+import MainLayout from "@/layouts/MainLayout";
+import AuthLayout from "@/layouts/AuthLayout";
+import AdminLayout from "@/layouts/AdminLayout";
+import ListFilmPage from "./pages/ListFilmPage";
+import { FilmDetailsPage } from "./pages/FilmDetailsPage";
 
 function App() {
   return (
@@ -15,6 +17,10 @@ function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
+        </Route>
+        <Route path="films" element={<MainLayout />}>
+          <Route index element={<ListFilmPage />} />
+          <Route path=":id" element={<FilmDetailsPage />} />
         </Route>
         <Route path="auth" element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
