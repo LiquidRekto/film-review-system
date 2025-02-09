@@ -1,14 +1,29 @@
-import { Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { IFilmRating } from "@/interfaces/rating";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Rating,
+  Typography,
+} from "@mui/material";
+import { FC } from "react";
 
-const RatingBlockComponent = () => {
+interface Props {
+  rating: IFilmRating;
+}
+
+const RatingBlockComponent: FC<Props> = (props) => {
   return (
     <Card>
-      <CardHeader>
-        <Typography variant="h2">user: alonso</Typography>
-        <Rating name="customized-10" defaultValue={2} max={10} />
-      </CardHeader>
       <CardContent>
-        <Typography>Phim như con cặc</Typography>
+        <Typography variant="h5">{props.rating.userName}</Typography>
+        <Rating
+          name="customized-10"
+          value={props.rating.rating}
+          readOnly
+          max={10}
+        />
+        <Typography>{props.rating.comment}</Typography>
       </CardContent>
     </Card>
   );

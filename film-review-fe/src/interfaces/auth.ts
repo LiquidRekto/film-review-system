@@ -13,3 +13,17 @@ export interface IAccountRegister {
   password: string;
   confirmPassword: string;
 }
+
+export interface IAccountInfo {
+  username: string;
+  first_name: string;
+  last_name: string;
+  dob: Date;
+  email: string;
+  phone_number: string;
+  role: string;
+}
+
+export interface ITokenInfo {
+  token: string;
+}

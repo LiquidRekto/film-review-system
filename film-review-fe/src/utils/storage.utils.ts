@@ -1,40 +1,18 @@
-import crypto from "crypto";
+import * as Crypto from "crypto-js";
 
 export class StorageUtils {
-  static key = import.meta.env.APP_ENCRYPTION_KEY;
+  static key = import.meta.env.APP_KEY_ENCRYPTION;
 
-  static encrypt(txtToEncrypt: string) {
-    const iv = crypto.randomBytes(import.meta.env.APP_KEY_IV_LENGTH);
-
-    const cipher = crypto.createCipheriv(
-      import.meta.env.APP_KEY_ALGORITHM,
-      Buffer.from(import.meta.env.APP_KEY_ENCRYPTION),
-      iv
-    );
-
-    let encrypted = cipher.update(txtToEncrypt, "utf8", "hex");
-    encrypted += cipher.final("hex");
-
-    // Package the IV and encrypted data together
-    return iv.toString("hex") + encrypted;
+  static encrypt(value: string) {
+    return Crypto.AES.encrypt(value, this.key).toString();
   }
 
   static decrypt(txtToDecrypt: string) {
-    const inputIV = txtToDecrypt.slice(0, 32);
-    const encrypted = txtToDecrypt.slice(32);
-
-    const decipher = crypto.createDecipheriv(
-      import.meta.env.APP_KEY_ALGORITHM,
-      Buffer.from(import.meta.env.APP_KEY_ALGORITHM),
-      Buffer.from(inputIV, "hex")
-    );
-
-    let decrypted = decipher.update(encrypted, "hex", "utf-8");
-    decrypted += decipher.final("utf-8");
-    return decrypted;
+    return Crypto.AES.decrypt(txtToDecrypt, this.key).toString(Crypto.enc.Utf8);
   }
 
   static setItem(key: string, value: string) {
+    console.log(this.key);
     localStorage.setItem(key, this.encrypt(value));
   }
 

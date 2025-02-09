@@ -8,7 +8,7 @@ export interface IPageRecords<T> {
 export interface IRecordFilter {
   offset: number;
   limit: number;
-  order: "ASC" | "DESC";
+  order: string | "ASC" | "DESC";
   orderBy: string;
   searchQuery: string;
   searchBy?: string;

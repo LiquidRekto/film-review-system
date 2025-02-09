@@ -1,24 +1,42 @@
+import { API_R_200, API_R_400 } from "@/constants/res-codes";
 import { IAccountLogin } from "@/interfaces/auth";
-import { BaseResponse } from "@/interfaces/response";
+import { APIError, APIResponse } from "@/interfaces/response";
 import { AuthService } from "@/services/auth.service";
 import { handleError } from "@/utils/err-handler";
 import { Request, Response } from "express";
 
 export class AuthController {
-  private filmService: AuthService;
+  private authService: AuthService;
 
   constructor() {
-    this.filmService = new AuthService();
+    this.authService = new AuthService();
   }
 
-  async login(req: Request, res: Response): Promise<BaseResponse> {
+  async login(req: Request, res: Response) {
     try {
       const data = req.body as IAccountLogin;
-      this.filmService.();
+      const result = await this.authService.login(data);
+
+      if (!result) {
+        throw new APIError("Incorrect username or password", API_R_400);
+      }
+
+      return res
+        .status(API_R_200)
+        .json(new APIResponse("Login successful", result));
     } catch (e) {
-      handleError(res, e)
+      handleError(res, e);
     }
   }
 
-  async register(req: Request, res: Response) {}
+  async register(req: Request, res: Response) {
+    try {
+      const data = req.body as IAccountLogin;
+      return res
+        .status(API_R_200)
+        .json(new APIResponse("Login successful", data));
+    } catch (e) {
+      handleError(res, e);
+    }
+  }
 }

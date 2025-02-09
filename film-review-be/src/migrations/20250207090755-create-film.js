@@ -22,15 +22,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      created_by: {
-        type: Sequelize.INTEGER,
+      thumbnailPath: {
+        type: Sequelize.TEXT,
         allowNull: true,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+      },
+      trailerUrl: {
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
       createdAt: {
         type: Sequelize.DATE,

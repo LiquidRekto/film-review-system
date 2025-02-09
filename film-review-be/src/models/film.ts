@@ -22,12 +22,8 @@ export class Film extends Model {
   director!: string;
 
   @Column({ type: DataType.STRING })
-  thumbnailPath!: string;
+  thumbnail_path!: string;
 
   @Column({ type: DataType.STRING })
-  trailerUrl!: string;
-
-  @ForeignKey(() => User)
-  @Column({ type: DataType.INTEGER })
-  created_by!: number;
+  trailer_url!: string;
 }

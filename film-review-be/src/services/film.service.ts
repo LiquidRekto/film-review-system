@@ -1,4 +1,5 @@
 import { API_R_404 } from "@/constants/res-codes";
+import { IPageRecords, IRecordFilter } from "@/interfaces/pagination";
 import { APIError } from "@/interfaces/response";
 import { Film } from "@/models/film";
 import { FilmRepository } from "@/repository/film.repository";
@@ -14,8 +15,20 @@ export class FilmService {
     return this.filmRepository.createFilm(data);
   }
 
+  async getAllFilms(
+    filters: IRecordFilter
+  ): Promise<IPageRecords<Film> | null> {
+    const films = await this.filmRepository.getAllFilms(filters);
+
+    if (!films) {
+      throw new APIError("Film not found!", API_R_404);
+    }
+
+    return films;
+  }
+
   async getFilmById(film_id: number): Promise<Film | null> {
-    const film = this.filmRepository.getFilmById(film_id);
+    const film = await this.filmRepository.getFilmById(film_id);
     console.log(film);
     if (!film) {
       throw new APIError("Film not found!", API_R_404);

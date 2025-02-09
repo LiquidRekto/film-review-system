@@ -36,13 +36,16 @@ export class User extends Model {
   username!: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  firstName!: string;
+  first_name!: string;
 
   @Column({ type: DataType.STRING })
-  lastName!: string;
+  last_name!: string;
+
+  @Column({ type: DataType.DATEONLY })
+  dob!: Date;
 
   @Column({ type: DataType.STRING })
-  phoneNumber!: string;
+  phone_number!: string;
 
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   email!: string;

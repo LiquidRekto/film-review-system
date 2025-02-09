@@ -3,13 +3,27 @@ export interface IAccountLogin {
   password: string;
 }
 
-export interface IAccountRegister {
-  firstName: string;
-  lastName: string;
+export interface IAccountInfo {
+  username: string;
+  first_name: string;
+  last_name: string;
   dob: Date;
-  phoneNumber: string;
+  email: string;
+  phone_number: string;
+  role: string;
+}
+
+export interface ITokenInfo {
+  token: string;
+}
+
+export interface IAccountRegister {
+  first_name: string;
+  last_name: string;
+  dob: Date;
+  phone_number: string;
   username: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  confirm_password: string;
 }

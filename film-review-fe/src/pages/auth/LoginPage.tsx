@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Container,
   Paper,
@@ -14,10 +14,13 @@ import { AuthService } from "@/services/auth.service";
 import { IAccountLogin } from "@/interfaces/auth";
 import { AxiosResponse } from "axios";
 import { API_R_200 } from "@/constants/error-codes";
+import { StorageUtils } from "@/utils/storage.utils";
+import { useNavigate } from "react-router";
 
 const LoginPage = () => {
   const [loginMsg, setLoginMsg] = useState("");
   const [finishProcess, setFinishProcess] = useState(true);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -45,9 +48,16 @@ const LoginPage = () => {
     setFinishProcess(false);
     const res = (await AuthService.login(loginData)) as AxiosResponse;
     if (res.status !== API_R_200) {
-      setLoginMsg("Invalid username or password");
+      if (res.data) {
+        setLoginMsg(res.data.message ?? "Unknown error occured");
+      }
+      setFinishProcess(true);
+      return;
     }
+    console.log(res.data.data);
+    StorageUtils.setItem("tokenInfo", JSON.stringify(res.data.data));
     setFinishProcess(true);
+    navigate("/films");
   };
 
   return (
