@@ -10,5 +10,7 @@ export class JWT {
     );
   };
 
-  static decodeToken = (token: string) => {};
+  static decodeToken = (token: string) => {
+    return jwt.verify(token, process.env.TOKEN_SECRET!);
+  };
 }

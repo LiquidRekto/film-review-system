@@ -13,15 +13,17 @@ export class FilmController {
   }
 
   async getAllFilms(req: Request, res: Response) {
-    const { offset, limit, order, orderBy, searchQuery, searchBy } = req.params;
+    const { offset, limit, order, orderBy, searchQuery, searchBy } = req.query;
+    console.log("REQPARAMS");
+    console.log(req.query);
     try {
       const filters: IRecordFilter = {
         offset: Number(offset),
         limit: Number(limit),
-        order: order,
-        orderBy: orderBy,
-        searchQuery: searchQuery,
-        searchBy: searchBy,
+        order: order?.toString(),
+        orderBy: orderBy?.toString(),
+        searchQuery: searchQuery?.toString(),
+        searchBy: searchBy?.toString(),
       };
       const filmRecords = await this.filmService.getAllFilms(filters);
       return res.status(API_R_200).json(filmRecords);

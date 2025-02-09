@@ -22,11 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      thumbnailPath: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
-      trailerUrl: {
+      thumbnail_path: {
         type: Sequelize.TEXT,
         allowNull: true,
       },

@@ -23,7 +23,4 @@ export class Film extends Model {
 
   @Column({ type: DataType.STRING })
   thumbnail_path!: string;
-
-  @Column({ type: DataType.STRING })
-  trailer_url!: string;
 }

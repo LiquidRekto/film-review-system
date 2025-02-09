@@ -8,35 +8,37 @@ export class FilmRepository {
   }
 
   async getAllFilms(filter: IRecordFilter): Promise<IPageRecords<Film>> {
-    let filterQuery = {
-      title: {},
-      director: {},
-    };
+    console.log(filter);
+
+    let filterQuery = {};
+
     switch (filter.searchBy) {
       case "title":
-        filterQuery.title = { [Op.like]: `%${filter.searchQuery}%` };
+        filterQuery = { title: { [Op.like]: `%${filter.searchQuery}%` } };
         break;
       case "director":
-        filterQuery.director = { [Op.like]: `%${filter.searchQuery}%` };
+        filterQuery = { director: { [Op.like]: `%${filter.searchQuery}%` } };
         break;
       default:
         filterQuery = {
-          title: { [Op.like]: `%${filter.searchQuery}%` },
-          director: { [Op.like]: `%${filter.searchQuery}%` },
+          title: { [Op.like]: `%${filter.searchQuery ?? ""}%` },
+          director: { [Op.like]: `%${filter.searchQuery ?? ""}%` },
         };
         break;
     }
+
     const { count, rows } = await Film.findAndCountAll({
       limit: filter.limit,
       offset: filter.offset,
-      order: [[filter.orderBy, filter.order]],
+      order: [[filter.orderBy!, filter.order!]],
+
       where: filterQuery,
     });
 
     return {
       totalItems: count,
-      totalPages: Math.ceil(count / filter.limit),
-      currentPage: filter.offset,
+      totalPages: Math.ceil(count / filter.limit!),
+      currentPage: filter.offset!,
       records: rows,
     };
   }

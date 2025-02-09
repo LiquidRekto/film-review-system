@@ -10,7 +10,6 @@ import {
 import { CommonUtils } from "@/utils/common.utils";
 import { useNavigate } from "react-router";
 import { StorageUtils } from "@/utils/storage.utils";
-import { IAccountInfo } from "@/interfaces/auth";
 
 const NavBarComponent = () => {
   const [user, setUser] = useState<string | null>(
