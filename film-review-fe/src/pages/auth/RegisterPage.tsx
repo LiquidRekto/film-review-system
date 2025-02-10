@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { AuthService } from "@/services/auth.service";
 import { AxiosResponse } from "axios";
 import { API_R_200 } from "@/constants/error-codes";
+import { useNavigate } from "react-router";
+import { StorageUtils } from "@/utils/storage.utils";
 
 const RegisterPage = () => {
   const [registerData, setRegisterData] = useState<IAccountRegister>({
@@ -22,6 +24,7 @@ const RegisterPage = () => {
 
   const [registerMsg, setRegisterMsg] = useState("");
   const [finishProcess, setFinishProcess] = useState(true);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -40,11 +43,26 @@ const RegisterPage = () => {
   };
 
   const handleRegister = async () => {
+    setRegisterMsg("");
     if (!isValid) return;
     setFinishProcess(false);
     const res = (await AuthService.register(registerData)) as AxiosResponse;
     if (res.status !== API_R_200) {
       setRegisterMsg("An error ocurred during registration, please try again");
+    } else {
+      StorageUtils.setItem("tokenInfo", JSON.stringify(res.data.data));
+      setFinishProcess(true);
+      setRegisterData({
+        firstName: "",
+        lastName: "",
+        dob: new Date(),
+        phoneNumber: "",
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      navigate("/films");
     }
     setFinishProcess(true);
   };

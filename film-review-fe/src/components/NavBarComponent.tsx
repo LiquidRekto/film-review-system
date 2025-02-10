@@ -43,6 +43,9 @@ const NavBarComponent = () => {
           FILMS
         </Button>
         <Typography sx={{ flexGrow: 1 }}></Typography>
+        <Button onClick={() => navigate("/auth/register")} color="inherit">
+          Register
+        </Button>
         {role === "admin" ? (
           <Button onClick={handleAdmin} color="inherit">
             ADMIN DASHBOARD
@@ -51,7 +54,7 @@ const NavBarComponent = () => {
           <></>
         )}
         {user ? (
-          <Button onClick={handleLogout} color="inherit">
+          <Button onClick={handleLogout} variant="contained" color="inherit">
             Logout
           </Button>
         ) : (

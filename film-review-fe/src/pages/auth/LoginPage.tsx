@@ -15,7 +15,7 @@ import { IAccountLogin } from "@/interfaces/auth";
 import { AxiosResponse } from "axios";
 import { API_R_200 } from "@/constants/error-codes";
 import { StorageUtils } from "@/utils/storage.utils";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const LoginPage = () => {
   const [loginMsg, setLoginMsg] = useState("");
@@ -98,6 +98,9 @@ const LoginPage = () => {
             error={!!errors.password}
             helperText={errors.password?.message?.toString()}
           />
+          <Typography component={Link} to="/auth/register">
+            Don't have an account? Click here to register!
+          </Typography>
           <Button
             type="submit"
             loading={!finishProcess}

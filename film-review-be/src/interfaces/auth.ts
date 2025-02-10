@@ -25,6 +25,6 @@ export interface IAccountRegister {
   phone_number: string;
   username: string;
   email: string;
-  password: string;
-  confirm_password: string;
+  password_hash: string;
+  role: string;
 }

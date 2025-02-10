@@ -42,13 +42,24 @@ export class AuthService {
     }
   }
 
-  async register(data: IAccountRegister): Promise<User> {
+  async register(data: IAccountRegister): Promise<ITokenInfo> {
     // const userData: User = {
     //   username: data.username,
     // };
-    const newUser = this.userRepository.createUser(data);
-
-    return newUser;
+    const newUser = await this.userRepository.createUser(data);
+    const userInfo: IAccountInfo = {
+      id: newUser.id,
+      username: newUser.username,
+      first_name: newUser.first_name,
+      last_name: newUser.last_name,
+      dob: newUser.dob,
+      email: newUser.email,
+      phone_number: newUser.phone_number,
+      role: newUser.role,
+    };
+    return {
+      token: JWT.generateToken(userInfo),
+    } as ITokenInfo;
   }
 }
 
