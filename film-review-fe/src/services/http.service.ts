@@ -20,7 +20,8 @@ export class Http {
         if (this.isAuth) {
           const tokenInfoStr = StorageUtils.getItem("tokenInfo");
           const tokenInfo = JSON.parse(tokenInfoStr);
-          request.headers.authorization = tokenInfo.accessToken;
+          console.log(tokenInfo);
+          request.headers.authorization = `Bearer ${tokenInfo.token}`;
           request.headers["Content-Type"] = this.contentType;
         }
 

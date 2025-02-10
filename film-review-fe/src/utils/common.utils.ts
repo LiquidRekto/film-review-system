@@ -9,9 +9,7 @@ export class CommonUtils {
     try {
       const tokenInfoStr = StorageUtils.getItem("tokenInfo");
       const tokenInfo = JSON.parse(tokenInfoStr);
-      console.log(tokenInfo.token);
       const decodedAccessInfo = jwtDecode(tokenInfo.token) as IAccountInfo;
-      console.log(decodedAccessInfo);
       return decodedAccessInfo.email;
     } catch (e) {
       return null;
@@ -22,10 +20,19 @@ export class CommonUtils {
     try {
       const tokenInfoStr = StorageUtils.getItem("tokenInfo");
       const tokenInfo = JSON.parse(tokenInfoStr);
-      console.log(tokenInfo.token);
       const decodedAccessInfo = jwtDecode(tokenInfo.token) as IAccountInfo;
-      console.log(decodedAccessInfo);
       return decodedAccessInfo.role;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static getUserId(): string | null {
+    try {
+      const tokenInfoStr = StorageUtils.getItem("tokenInfo");
+      const tokenInfo = JSON.parse(tokenInfoStr);
+      const decodedAccessInfo = jwtDecode(tokenInfo.token) as IAccountInfo;
+      return decodedAccessInfo.id;
     } catch (e) {
       return null;
     }

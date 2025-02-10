@@ -22,6 +22,7 @@ export class AuthService {
       const user = await this.userRepository.verfiyUser(data);
       if (user !== null) {
         const userInfo: IAccountInfo = {
+          id: user?.id,
           username: user?.username,
           first_name: user?.first_name,
           last_name: user?.last_name,
@@ -35,7 +36,6 @@ export class AuthService {
           token: JWT.generateToken(userInfo),
         } as ITokenInfo;
       }
-      console.log("USER " + user);
       return null;
     } catch (e) {
       return null;

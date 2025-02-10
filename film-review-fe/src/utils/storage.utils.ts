@@ -12,7 +12,6 @@ export class StorageUtils {
   }
 
   static setItem(key: string, value: string) {
-    console.log(this.key);
     localStorage.setItem(key, this.encrypt(value));
   }
 

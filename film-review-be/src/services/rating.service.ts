@@ -12,7 +12,7 @@ export class RatingService {
   }
 
   async createRating(data: Partial<Rating>): Promise<Rating> {
-    return this.ratingRepository.createRating(data);
+    return await this.ratingRepository.createRating(data);
   }
 
   async getAllRatings(

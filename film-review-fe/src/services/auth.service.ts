@@ -14,7 +14,6 @@ export class AuthService extends BaseService {
         API_ENV.MAIN + API_ACCOUNT_LOG_IN,
         data
       );
-      console.log(response);
       return response;
     } catch (error) {
       return (error as AxiosError).response;
@@ -29,7 +28,6 @@ export class AuthService extends BaseService {
         API_ENV.MAIN + API_ACCOUNT_REGISTER,
         data
       );
-      console.log(response);
       return response;
     } catch (error) {
       return (error as AxiosError).response;

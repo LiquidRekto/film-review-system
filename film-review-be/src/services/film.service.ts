@@ -29,7 +29,6 @@ export class FilmService {
 
   async getFilmById(film_id: number): Promise<Film | null> {
     const film = await this.filmRepository.getFilmById(film_id);
-    console.log(film);
     if (!film) {
       throw new APIError("Film not found!", API_R_404);
     }
@@ -53,8 +52,6 @@ export class FilmService {
 
   async deleteFilm(film_id: number): Promise<void> {
     const film = await this.filmRepository.getFilmById(film_id);
-    console.log("DA FILM");
-    console.log(film);
     if (!film) {
       throw new APIError("Film not found!", API_R_404);
     }

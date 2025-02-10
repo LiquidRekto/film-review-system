@@ -14,16 +14,22 @@ interface Props {
 
 const RatingBlockComponent: FC<Props> = (props) => {
   return (
-    <Card>
+    <Card sx={{ width: "80%" }}>
       <CardContent>
-        <Typography variant="h5">{props.rating.userName}</Typography>
+        <Typography variant="h5">{props.rating.full_name}</Typography>
+        <Typography variant="h6" style={{ fontStyle: "italic" }}>
+          {props.rating.user_name}
+        </Typography>
         <Rating
           name="customized-10"
           value={props.rating.rating}
           readOnly
           max={10}
         />
-        <Typography>{props.rating.comment}</Typography>
+        <Typography style={{ fontStyle: "italic" }}>
+          {props.rating.comment}
+        </Typography>
+        <Typography>{props.rating.created_date}</Typography>
       </CardContent>
     </Card>
   );

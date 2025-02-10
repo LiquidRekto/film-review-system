@@ -5,6 +5,9 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ConfirmDialogComponent from "@/components/common/ConfirmDialogComponent";
+import { FilmService } from "@/services/film.service";
+import { AxiosResponse } from "axios";
+import { API_R_200 } from "@/constants/error-codes";
 
 export const AdminDashboardPage = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -18,39 +21,38 @@ export const AdminDashboardPage = () => {
   };
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID", flex: 1 },
     {
-      field: "firstName",
-      headerName: "First name",
-      editable: false,
+      field: "title",
+      headerName: "Title",
       flex: 1,
     },
     {
-      field: "lastName",
-      headerName: "Last name",
-      editable: false,
+      field: "description",
+      headerName: "Description",
       flex: 1,
     },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      editable: true,
+      field: "director",
+      headerName: "Director(s)",
       flex: 1,
     },
     {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      valueGetter: (value, row) =>
-        `${row.firstName || ""} ${row.lastName || ""}`,
+      field: "thumbnail",
+      headerName: "Film thumbnail image ",
+      description: "Film image",
       flex: 1,
+      renderCell: (params) => (
+        <img
+          src={params.value}
+          alt="Avatar"
+          style={{ width: "50%", height: 40, borderRadius: "50%" }}
+        />
+      ),
     },
     {
       field: "actions",
       headerName: "Actions",
-      width: 200,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -63,8 +65,14 @@ export const AdminDashboardPage = () => {
   ];
 
   const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 14 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 31 },
+    {
+      id: 1,
+      title: "My FIlm",
+      description: "ABCXYZ",
+      director: "Bob Smith",
+      thumbnail: "/landscape-placeholder.svg",
+    },
+    { id: 2, lastName: "Lannister", firstName: "Cer", age: 31 },
     { id: 3, lastName: "Lannister", firstName: "Jaime", age: 31 },
     { id: 4, lastName: "Stark", firstName: "Arya", age: 11 },
     { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
@@ -83,6 +91,24 @@ export const AdminDashboardPage = () => {
 
   const handleDeleteConfirm = () => {
     setConfirmDeleteOpen(false);
+  };
+
+  const handleGetFilmList = async () => {
+    /*
+    const filters = {
+      offset: (currentPage - 1) * PAGE_RECORDS,
+      limit: PAGE_RECORDS,
+      order: "ASC",
+      orderBy: "createdAt",
+    };
+    */
+
+    const res = (await FilmService.getAllFims()) as AxiosResponse;
+    if (res.status === API_R_200) {
+      //setFilmRecords(res.data.records);
+      //console.log(res.data);
+      //setTotalPages(res.data.totalPages);
+    }
   };
 
   return (
@@ -119,7 +145,6 @@ export const AdminDashboardPage = () => {
           pageSizeOptions={[5]}
           onRowSelectionModelChange={(newSelection) => {
             setSelectedRows(newSelection); // Stores selected row IDs
-            console.log("bruh");
           }}
           checkboxSelection
         />

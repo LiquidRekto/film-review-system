@@ -49,6 +49,7 @@ export class RatingRepository {
       offset: filter.offset,
       include: {
         model: User,
+        attributes: ["username", "first_name", "last_name", "createdAt"],
       },
       order: [[filter.orderBy!, filter.order!]],
       where: whereOp,

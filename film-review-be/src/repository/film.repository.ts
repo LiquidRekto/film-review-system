@@ -1,6 +1,7 @@
 import { IPageRecords, IRecordFilter } from "@/interfaces/pagination";
 import { Film } from "@/models/film";
-import { Op } from "sequelize";
+import { Rating } from "@/models/rating";
+import { col, fn, Op } from "sequelize";
 
 export class FilmRepository {
   async createFilm(data: Partial<Film>): Promise<Film> {
@@ -8,8 +9,6 @@ export class FilmRepository {
   }
 
   async getAllFilms(filter: IRecordFilter): Promise<IPageRecords<Film>> {
-    console.log(filter);
-
     let filterQuery = {};
 
     switch (filter.searchBy) {
@@ -27,17 +26,34 @@ export class FilmRepository {
         break;
     }
 
-    const { count, rows } = await Film.findAndCountAll({
-      limit: filter.limit,
-      offset: filter.offset,
-      order: [[filter.orderBy!, filter.order!]],
+    const totalCount = await Film.count({
+      //where: filterQuery, // Keep the same filters
+    });
 
-      where: filterQuery,
+    const rows = await Film.findAll({
+      //limit: filter.limit,
+      //offset: filter.offset,
+      //order: [[filter.orderBy!, filter.order!]],
+      //where: filterQuery,
+      attributes: [
+        "id",
+        "title",
+        "description",
+        "director",
+        "thumbnail_path",
+        [fn("AVG", col("Ratings.rating_score")), "avg_rating"], // AVG rating
+      ],
+      include: {
+        model: Rating,
+        attributes: [],
+      },
+      group: ["Film.id"], // Group by Film ID
+      subQuery: false, // Avoid issues with MySQL's ONLY_FULL_GROUP_BY
     });
 
     return {
-      totalItems: count,
-      totalPages: Math.ceil(count / filter.limit!),
+      totalItems: totalCount,
+      totalPages: Math.ceil(totalCount / filter.limit!),
       currentPage: filter.offset!,
       records: rows,
     };

@@ -1,13 +1,16 @@
 import RatingBlockComponent from "@/components/RatingBlockComponent";
 import { API_R_200 } from "@/constants/error-codes";
 import { IFilm } from "@/interfaces/film";
-import { IFilmRating } from "@/interfaces/rating";
+import { IFilmRating, IRatingSubmit } from "@/interfaces/rating";
 import { FilmService } from "@/services/film.service";
 import { RatingService } from "@/services/rating.service";
+import { CommonUtils } from "@/utils/common.utils";
 import {
   Box,
   Button,
   CircularProgress,
+  Grid2,
+  Pagination,
   Rating,
   TextField,
   Typography,
@@ -22,8 +25,14 @@ export const FilmDetailsPage = () => {
   const [ratingComment, setRatingComment] = useState("");
 
   const [finishProcess, setFinishProcess] = useState(false);
+  const [finishRatingProcess, setFinishRatingProcess] = useState(false);
+  const [finishSubmitProcess, setFinishSubmitProcess] = useState(true);
   const [filmDetail, setFilmDetail] = useState<IFilm | null>(null);
   const [filmRatingList, setFilmRatingList] = useState<IFilmRating[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const PAGE_RECORDS = 4;
 
   const handleGetFilm = async () => {
     setFinishProcess(false);
@@ -35,25 +44,84 @@ export const FilmDetailsPage = () => {
     if (res.status === API_R_200) {
       console.log(res.data);
       setFilmDetail(res.data);
+      handleGetFilmRatings();
     } else {
       console.error("Error while fetching");
     }
     setFinishProcess(true);
   };
 
+  const [ratingSubmitInfo, setRatingSubmitInfo] = useState<IRatingSubmit>({
+    user_id: Number(CommonUtils.getUserId()),
+    film_id: Number(id),
+    rating_score: 0,
+    comment: "",
+  });
+
+  const handleRatingSubmit = async () => {
+    setFinishSubmitProcess(false);
+
+    const res = (await RatingService.createRating(
+      ratingSubmitInfo
+    )) as AxiosResponse;
+    if (res.status === API_R_200) {
+      handleGetFilmRatings();
+      setRatingSubmitInfo({
+        user_id: Number(CommonUtils.getUserId()),
+        film_id: Number(id),
+        rating_score: 0,
+        comment: "",
+      });
+    } else {
+      console.log();
+    }
+    setFinishSubmitProcess(true);
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setCurrentPage(value);
+  };
+
+  useEffect(() => {
+    handleGetFilmRatings();
+  }, [currentPage]);
+
   const handleGetFilmRatings = async () => {
-    setFinishProcess(false);
+    const filters = {
+      offset: (currentPage - 1) * PAGE_RECORDS,
+      limit: PAGE_RECORDS,
+      order: "DESC",
+      orderBy: "createdAt",
+    };
+
+    setFinishRatingProcess(false);
     if (isNaN(Number(id))) {
-      setFinishProcess(true);
+      setFinishRatingProcess(true);
       return;
     }
     const res = (await RatingService.getRatingsByFilm(
-      Number(id)
+      Number(id),
+      filters
     )) as AxiosResponse;
     if (res.status === API_R_200) {
-      setFilmDetail(res.data.data);
+      const records = res.data.records;
+      setTotalPages(res.data.totalPages);
+      setFilmRatingList(
+        records.map((val) => {
+          return {
+            user_name: val.user.username,
+            full_name: `${val.user.first_name} ${val.user.last_name}`,
+            created_date: val.createdAt,
+            rating: val.rating_score,
+            comment: val.comment,
+          } as IFilmRating;
+        })
+      );
     }
-    setFinishProcess(true);
+    setFinishRatingProcess(true);
   };
 
   useEffect(() => {
@@ -66,16 +134,6 @@ export const FilmDetailsPage = () => {
         <Box sx={{ display: "flex" }}>
           <Box sx={{ width: "50%" }}>
             <img src={filmDetail.thumbnail_path} />
-            <Box>
-              <iframe
-                width="560"
-                height="315"
-                src={filmDetail.trailerUrl}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </Box>
           </Box>
           <Box sx={{ width: "50%" }}>
             <Typography variant="h5">Title:</Typography>
@@ -86,29 +144,80 @@ export const FilmDetailsPage = () => {
             <Typography>{filmDetail.director}</Typography>
           </Box>
         </Box>
-        <Box>
+        <Box sx={{ display: "block" }}>
           <Typography variant="h4">Leave a rating!</Typography>
+          {!CommonUtils.getUserEmail() ? (
+            <Typography color="error">
+              Please login to use this function.
+            </Typography>
+          ) : (
+            <></>
+          )}
           <Box>
             <Rating
-              onChange={(e, newVal) => setFilmRating(Number(newVal))}
-              value={filmRating}
+              onChange={(e, newVal) =>
+                setRatingSubmitInfo({
+                  ...ratingSubmitInfo,
+                  rating_score: Number(newVal),
+                })
+              }
+              readOnly={!CommonUtils.getUserEmail() ? true : false}
+              value={ratingSubmitInfo.rating_score}
               max={10}
             />
           </Box>
           <Box>
             <TextField
-              onChange={(e) => setRatingComment(e.target.value)}
-              value={ratingComment}
+              onChange={(e) =>
+                setRatingSubmitInfo({
+                  ...ratingSubmitInfo,
+                  comment: e.target.value,
+                })
+              }
+              disabled={!CommonUtils.getUserEmail() ? true : false}
+              value={ratingSubmitInfo.comment}
+              multiline
+              rows={4}
             />
           </Box>
           <Button
-            disabled={filmRating <= 0 || ratingComment.length <= 0}
+            disabled={
+              ratingSubmitInfo.rating_score <= 0 ||
+              ratingSubmitInfo.comment.length <= 0 ||
+              !CommonUtils.getUserEmail()
+            }
+            onClick={handleRatingSubmit}
             variant="contained"
+            loading={!finishSubmitProcess}
           >
             Submit
           </Button>
         </Box>
-        <Box></Box>
+        <Box sx={{ width: "100%" }}>
+          <Grid2 container spacing={4}>
+            {finishRatingProcess ? (
+              filmRatingList.map((val) => {
+                return (
+                  <Grid2 size={12}>
+                    <RatingBlockComponent rating={val} />
+                  </Grid2>
+                );
+              })
+            ) : (
+              <CircularProgress />
+            )}
+          </Grid2>
+          {finishRatingProcess ? (
+            <Pagination
+              onChange={handlePageChange}
+              page={currentPage}
+              count={totalPages}
+              color="primary"
+            />
+          ) : (
+            <></>
+          )}
+        </Box>
       </>
     ) : (
       <Typography variant="h3">NOT FOUND</Typography>
