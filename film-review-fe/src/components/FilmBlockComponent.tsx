@@ -25,10 +25,7 @@ const FilmBlockComponent: FC<Props> = (props) => {
   };
 
   return (
-    <Card
-      elevation={4}
-      sx={{ maxWidth: 300, height: 600, backgroundColor: "gold" }}
-    >
+    <Card elevation={4} sx={{ maxWidth: 300, height: 600 }}>
       <CardMedia
         sx={{ height: 400, maxWidth: 300 }}
         image={props.film.thumbnail_path}
