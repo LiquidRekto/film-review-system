@@ -58,6 +58,9 @@ export class User extends Model {
   role!: string;
 
   // Association: User has many Ratings
-  @HasMany(() => Rating)
+  @HasMany(() => Rating, {
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  })
   ratings!: Rating[];
 }

@@ -26,6 +26,9 @@ export class Film extends Model {
   thumbnail_path!: string;
 
   // Association: User has many Ratings
-  @HasMany(() => Rating)
+  @HasMany(() => Rating, {
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  })
   ratings!: Rating[];
 }

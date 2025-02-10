@@ -18,7 +18,7 @@ module.exports = {
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
       },
       film_id: {
         type: Sequelize.INTEGER,
@@ -28,7 +28,7 @@ module.exports = {
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
       },
       rating_score: {
         type: Sequelize.INTEGER,

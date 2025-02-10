@@ -11,6 +11,7 @@ import AdminLayout from "@/layouts/AdminLayout";
 import ListFilmPage from "./pages/ListFilmPage";
 import { FilmDetailsPage } from "./pages/FilmDetailsPage";
 import NotFoundPage from "./pages/common/NotFoundPage";
+import AdminRatingListPage from "./pages/admin/AdminRatingListPage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
 
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboardPage />} />
+          <Route path="ratings" element={<AdminRatingListPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

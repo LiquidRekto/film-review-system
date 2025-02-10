@@ -6,8 +6,10 @@ import {
   ListItemText,
   IconButton,
   Box,
+  ListItemButton,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router";
 
 interface Props {
   width: number;
@@ -39,10 +41,14 @@ const SideBarComponent: FC<Props> = (props) => {
         onClose={toggleDrawer(false)}
       >
         <List>
-          {["Home", "About", "Contact", "Login"].map((text) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
-            </ListItem>
+          {[
+            { text: "Back to Home", link: "/" },
+            { text: "List Films", link: "/admin" },
+            { text: "List Rankings", link: "/admin/ratings" },
+          ].map((val) => (
+            <ListItemButton component={Link} to={val.link} key={val.text}>
+              <ListItemText primary={val.text} />
+            </ListItemButton>
           ))}
         </List>
       </Drawer>

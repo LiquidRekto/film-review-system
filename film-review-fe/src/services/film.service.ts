@@ -23,19 +23,21 @@ export class FilmService extends BaseService {
     }
   }
 
-  static async getAllFims(filters: IRecordFilter) {
+  static async getAllFims(filters?: IRecordFilter) {
     try {
       const response = await this.request({ auth: false }).get(
         API_ENV.MAIN + API_FILM_GET,
         {
-          params: {
-            offset: filters.offset || "",
-            limit: filters.limit || "",
-            order: filters.order || "",
-            orderBy: filters.orderBy || "",
-            searchQuery: filters.searchQuery || "",
-            searchBy: filters.searchBy || "",
-          },
+          params: filters
+            ? {
+                offset: filters.offset || "",
+                limit: filters.limit || "",
+                order: filters.order || "",
+                orderBy: filters.orderBy || "",
+                searchQuery: filters.searchQuery || "",
+                searchBy: filters.searchBy || "",
+              }
+            : null,
         }
       );
       return response;

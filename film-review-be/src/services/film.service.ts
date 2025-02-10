@@ -16,9 +16,9 @@ export class FilmService {
   }
 
   async getAllFilms(
-    filters: IRecordFilter
+    filters: IRecordFilter | null
   ): Promise<IPageRecords<Film> | null> {
-    const films = await this.filmRepository.getAllFilms(filters);
+    const films = await this.filmRepository.getAllFilms(filters!);
 
     if (!films) {
       throw new APIError("Film not found!", API_R_404);

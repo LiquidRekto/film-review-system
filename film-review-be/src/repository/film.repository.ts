@@ -1,60 +1,88 @@
 import { IPageRecords, IRecordFilter } from "@/interfaces/pagination";
 import { Film } from "@/models/film";
 import { Rating } from "@/models/rating";
-import { col, fn, Op } from "sequelize";
+import { col, FindOptions, fn, Op } from "sequelize";
 
 export class FilmRepository {
   async createFilm(data: Partial<Film>): Promise<Film> {
     return await Film.create(data);
   }
 
-  async getAllFilms(filter: IRecordFilter): Promise<IPageRecords<Film>> {
+  async getAllFilms(filter: IRecordFilter | null): Promise<IPageRecords<Film>> {
     let filterQuery = {};
-
-    switch (filter.searchBy) {
-      case "title":
-        filterQuery = { title: { [Op.like]: `%${filter.searchQuery}%` } };
-        break;
-      case "director":
-        filterQuery = { director: { [Op.like]: `%${filter.searchQuery}%` } };
-        break;
-      default:
-        filterQuery = {
-          title: { [Op.like]: `%${filter.searchQuery ?? ""}%` },
-          director: { [Op.like]: `%${filter.searchQuery ?? ""}%` },
-        };
-        break;
+    if (filter) {
+      switch (filter.searchBy) {
+        case "title":
+          filterQuery = { title: { [Op.like]: `%${filter.searchQuery}%` } };
+          break;
+        case "director":
+          filterQuery = { director: { [Op.like]: `%${filter.searchQuery}%` } };
+          break;
+        default:
+          filterQuery = {
+            title: { [Op.like]: `%${filter.searchQuery ?? ""}%` },
+            director: { [Op.like]: `%${filter.searchQuery ?? ""}%` },
+          };
+          break;
+      }
     }
 
-    const totalCount = await Film.count({
-      //where: filterQuery, // Keep the same filters
-    });
+    const totalCount = await Film.count(
+      filter
+        ? {
+            where: filterQuery,
+          }
+        : {}
+    );
 
-    const rows = await Film.findAll({
-      //limit: filter.limit,
-      //offset: filter.offset,
-      //order: [[filter.orderBy!, filter.order!]],
-      //where: filterQuery,
-      attributes: [
-        "id",
-        "title",
-        "description",
-        "director",
-        "thumbnail_path",
-        [fn("AVG", col("Ratings.rating_score")), "avg_rating"], // AVG rating
-      ],
-      include: {
-        model: Rating,
-        attributes: [],
-      },
-      group: ["Film.id"], // Group by Film ID
-      subQuery: false, // Avoid issues with MySQL's ONLY_FULL_GROUP_BY
-    });
+    let options: FindOptions<any> | undefined;
+
+    if (filter) {
+      options = {
+        limit: filter.limit,
+        offset: filter.offset,
+        order: [[filter.orderBy!, filter.order!]],
+        where: filterQuery,
+        attributes: [
+          "id",
+          "title",
+          "description",
+          "director",
+          "thumbnail_path",
+          [fn("AVG", col("Ratings.rating_score")), "avg_rating"], // AVG rating
+        ],
+        include: {
+          model: Rating,
+          attributes: [],
+        },
+        group: ["Film.id"], // Group by Film ID
+        subQuery: false, // Avoid issues with MySQL's ONLY_FULL_GROUP_BY
+      };
+    } else {
+      options = {
+        attributes: [
+          "id",
+          "title",
+          "description",
+          "director",
+          "thumbnail_path",
+          [fn("AVG", col("Ratings.rating_score")), "avg_rating"], // AVG rating
+        ],
+        include: {
+          model: Rating,
+          attributes: [],
+        },
+        group: ["Film.id"], // Group by Film ID
+        subQuery: false, // Avoid issues with MySQL's ONLY_FULL_GROUP_BY
+      };
+    }
+
+    const rows = await Film.findAll(options);
 
     return {
       totalItems: totalCount,
-      totalPages: Math.ceil(totalCount / filter.limit!),
-      currentPage: filter.offset!,
+      totalPages: filter ? Math.ceil(totalCount / filter.limit!) : 0,
+      currentPage: filter ? filter.offset! : 0,
       records: rows,
     };
   }

@@ -1,6 +1,6 @@
 import SideBarComponent from "@/components/SideBarComponent";
 import { Box, Button, IconButton, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -8,6 +8,7 @@ import ConfirmDialogComponent from "@/components/common/ConfirmDialogComponent";
 import { FilmService } from "@/services/film.service";
 import { AxiosResponse } from "axios";
 import { API_R_200 } from "@/constants/error-codes";
+import AddFilmDialogComponent from "@/components/AddFilmDialogComponent";
 
 export const AdminDashboardPage = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -64,6 +65,8 @@ export const AdminDashboardPage = () => {
     },
   ];
 
+  const [filmRows, setFilmRows] = useState([]);
+
   const rows = [
     {
       id: 1,
@@ -83,38 +86,55 @@ export const AdminDashboardPage = () => {
   ];
 
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [editFilmOpen, setEditFilmOpen] = useState(false);
+  const [addFilmOpen, setAddFilmOpen] = useState(false);
   const [confirmMultiDeleteOpen, setConfirmMultiDeleteOpen] = useState(false);
 
-  const handleMultiDeleteConfirm = () => {
-    setConfirmMultiDeleteOpen(false);
+  const handleMultiDeleteConfirm = async () => {
+    const apiCalls = [];
+    console.log(selectedRows);
+    selectedRows.forEach((v) => {
+      apiCalls.push(FilmService.deleteFilm(v));
+    });
+    Promise.all(apiCalls).then(() => {
+      setConfirmMultiDeleteOpen(false);
+    });
+    await handleGetFilmList();
   };
 
   const handleDeleteConfirm = () => {
     setConfirmDeleteOpen(false);
   };
 
-  const handleGetFilmList = async () => {
-    /*
-    const filters = {
-      offset: (currentPage - 1) * PAGE_RECORDS,
-      limit: PAGE_RECORDS,
-      order: "ASC",
-      orderBy: "createdAt",
-    };
-    */
+  const handleAddFilm = (data) => {
+    console.log(data);
+  };
 
+  const handleGetFilmList = async () => {
     const res = (await FilmService.getAllFims()) as AxiosResponse;
     if (res.status === API_R_200) {
+      setFilmRows(res.data.records);
       //setFilmRecords(res.data.records);
       //console.log(res.data);
       //setTotalPages(res.data.totalPages);
     }
   };
 
+  useEffect(() => {
+    handleGetFilmList();
+  }, []);
+
   return (
     <>
-      <Typography variant="h1"> Test Layout</Typography>
-      <Button variant="contained">Add new film</Button>
+      <Typography variant="h1"> Film List</Typography>
+      <Button onClick={() => setAddFilmOpen(true)} variant="contained">
+        Add new film
+      </Button>
+      <AddFilmDialogComponent
+        open={addFilmOpen}
+        onClose={() => setAddFilmOpen(false)}
+        onSubmit={handleAddFilm}
+      />
       <Button
         onClick={() => setConfirmMultiDeleteOpen(true)}
         disabled={selectedRows.length <= 0}
@@ -133,7 +153,7 @@ export const AdminDashboardPage = () => {
       />
       <Box sx={{ width: "100%" }}>
         <DataGrid
-          rows={rows}
+          rows={filmRows}
           columns={columns}
           initialState={{
             pagination: {
@@ -146,6 +166,7 @@ export const AdminDashboardPage = () => {
           onRowSelectionModelChange={(newSelection) => {
             setSelectedRows(newSelection); // Stores selected row IDs
           }}
+          disableRowSelectionOnClick
           checkboxSelection
         />
       </Box>

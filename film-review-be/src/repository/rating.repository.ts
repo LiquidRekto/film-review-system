@@ -13,10 +13,20 @@ export class RatingRepository {
   async getAllRatings(filter: IRecordFilter): Promise<IPageRecords<Rating>> {
     // No filter queries (searchBy, searchQuery) for ratings
     const { count, rows } = await Rating.findAndCountAll({
-      limit: filter.limit,
-      offset: filter.offset,
-      order: [[filter.orderBy!, filter.order!]],
+      //limit: filter.limit,
+      //offset: filter.offset,
+      //order: [[filter.orderBy!, filter.order!]],
       // where: filterQuery,
+      include: [
+        {
+          model: User,
+          attributes: ["username", "first_name", "last_name"],
+        },
+        {
+          model: Film,
+          attributes: ["title"],
+        },
+      ],
     });
 
     return {
