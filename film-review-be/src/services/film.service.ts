@@ -42,23 +42,24 @@ export class FilmService {
   //   }
 
   async updateFilm(film_id: number, data: Partial<Film>): Promise<void> {
-    const film = this.filmRepository.getFilmById(film_id);
+    const film = await this.filmRepository.getFilmById(film_id);
 
     if (!film) {
       throw new Error("Film not found!");
     }
 
-    this.filmRepository.updateFilm(film_id, data);
+    await this.filmRepository.updateFilm(film_id, data);
   }
 
   async deleteFilm(film_id: number): Promise<void> {
-    const film = this.filmRepository.getFilmById(film_id);
-
+    const film = await this.filmRepository.getFilmById(film_id);
+    console.log("DA FILM");
+    console.log(film);
     if (!film) {
-      throw new Error("Film not found!");
+      throw new APIError("Film not found!", API_R_404);
     }
 
-    this.filmRepository.deleteFilm(film_id);
+    await this.filmRepository.deleteFilm(film_id);
   }
 }
 

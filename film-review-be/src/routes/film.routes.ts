@@ -9,8 +9,12 @@ router.get("/:id", (req: Request, res: Response) => {
   filmController.getFilmById(req, res);
 });
 
-router.get("/", authorize(["admin"]), (req: Request, res: Response) => {
+router.get("/", (req: Request, res: Response) => {
   filmController.getAllFilms(req, res);
+});
+
+router.delete("/:id", authorize(["admin"]), (req: Request, res: Response) => {
+  filmController.deleteFilm(req, res);
 });
 
 export default router;

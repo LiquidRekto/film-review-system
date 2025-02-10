@@ -52,11 +52,11 @@ export class FilmRepository {
   //   }
 
   async updateFilm(film_id: number, data: Partial<Film>): Promise<void> {
-    await Film.update(data, { where: { film_id } });
+    await Film.update(data, { where: { id: film_id } });
   }
 
   async deleteFilm(film_id: number): Promise<void> {
-    await Film.destroy({ where: { film_id } });
+    await Film.destroy({ where: { id: film_id } });
   }
 }
 

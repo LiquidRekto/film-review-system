@@ -13,7 +13,7 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/films", filmRoutes);
-app.use("/api/rating", ratingRoutes);
+app.use("/api/ratings", ratingRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TS Server");
