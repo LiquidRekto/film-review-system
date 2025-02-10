@@ -1,7 +1,7 @@
 # Film review system (Hệ thống đánh giá phim)
 Đây là source code cho demo web hệ thống đánh giá phim.
 
-Phần demo web này sử dụng: Express.js cho BE, React.js cho FE (Vite) - sử dụng Material UI, Sequelite được sử dụng để tương tác với DB.
+Phần demo web này sử dụng: Express.js cho BE, React.js cho FE (Vite) - sử dụng Material UI, Sequelize được sử dụng để tương tác với DB.
 
 # Các file ENV cần khởi tạo
 Để phục vụ cho web chạy ổn định, sẽ cần phải khởi tạo một số biến môi trường, cụ thể như sau
