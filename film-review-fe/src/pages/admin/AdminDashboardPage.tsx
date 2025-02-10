@@ -9,6 +9,7 @@ import { FilmService } from "@/services/film.service";
 import { AxiosResponse } from "axios";
 import { API_R_200 } from "@/constants/error-codes";
 import AddFilmDialogComponent from "@/components/AddFilmDialogComponent";
+import FilmEditDialogComponent from "@/components/FilmEditDialogComponent";
 
 export const AdminDashboardPage = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -48,7 +49,7 @@ export const AdminDashboardPage = () => {
           <img
             src={params.value}
             alt="Avatar"
-            style={{ width: "50%", height: 40, borderRadius: "50%" }}
+            style={{ width: "50%", height: 40 }}
           />
         );
       },
@@ -59,7 +60,10 @@ export const AdminDashboardPage = () => {
       flex: 1,
       renderCell: (params) => (
         <>
-          <IconButton color="primary" onClick={() => handleEdit(params.row.id)}>
+          <IconButton
+            color="primary"
+            onClick={() => handleGetFilm(params.row.id)}
+          >
             <EditIcon />
           </IconButton>
         </>
@@ -90,7 +94,52 @@ export const AdminDashboardPage = () => {
     console.log(data);
     const res = (await FilmService.createFilm(data)) as AxiosResponse;
     if (res.status === API_R_200) {
+      handleGetFilmList();
+    } else {
+      console.log("fail");
+    }
+  };
+
+  const [filmEdit, setFilmEdit] = useState({
+    id: "",
+    title: "",
+    description: "",
+    director: "",
+  });
+
+  const handleGetFilm = async (id) => {
+    if (isNaN(Number(id))) {
+      return;
+    }
+    const res = (await FilmService.getFilmById(Number(id))) as AxiosResponse;
+    if (res.status === API_R_200) {
+      const dat = res.data;
       console.log(res.data);
+      setFilmEdit({
+        id: dat.id,
+        title: dat.title,
+        description: dat.description,
+        director: dat.director,
+      });
+    } else {
+      console.error("Error while fetching");
+    }
+  };
+
+  useEffect(() => {
+    if (filmEdit.id) {
+      console.log(filmEdit);
+      setEditFilmOpen(true);
+    }
+  }, [filmEdit]);
+
+  const handleEditFilm = async (data) => {
+    const res = (await FilmService.updateFilm(
+      Number(filmEdit.id),
+      data
+    )) as AxiosResponse;
+    if (res.status === API_R_200) {
+      handleGetFilmList();
     } else {
       console.log("fail");
     }
@@ -100,9 +149,6 @@ export const AdminDashboardPage = () => {
     const res = (await FilmService.getAllFims()) as AxiosResponse;
     if (res.status === API_R_200) {
       setFilmRows(res.data.records);
-      //setFilmRecords(res.data.records);
-      //console.log(res.data);
-      //setTotalPages(res.data.totalPages);
     }
   };
 
@@ -112,8 +158,12 @@ export const AdminDashboardPage = () => {
 
   return (
     <>
-      <Typography variant="h1"> Film List</Typography>
-      <Button onClick={() => setAddFilmOpen(true)} variant="contained">
+      <Typography variant="h3"> Film List</Typography>
+      <Button
+        sx={{ my: 2 }}
+        onClick={() => setAddFilmOpen(true)}
+        variant="contained"
+      >
         Add new film
       </Button>
       <AddFilmDialogComponent
@@ -121,7 +171,14 @@ export const AdminDashboardPage = () => {
         onClose={() => setAddFilmOpen(false)}
         onSubmit={handleAddFilm}
       />
+      <FilmEditDialogComponent
+        film_ip={filmEdit}
+        open={editFilmOpen}
+        onClose={() => setEditFilmOpen(false)}
+        onSubmit={handleEditFilm}
+      />
       <Button
+        sx={{ mx: 2, my: 2 }}
         onClick={() => setConfirmMultiDeleteOpen(true)}
         disabled={selectedRows.length <= 0}
         variant="contained"
@@ -148,7 +205,7 @@ export const AdminDashboardPage = () => {
               },
             },
           }}
-          pageSizeOptions={[5]}
+          pageSizeOptions={[5, 10, 25]}
           onRowSelectionModelChange={(newSelection) => {
             setSelectedRows(newSelection); // Stores selected row IDs
           }}

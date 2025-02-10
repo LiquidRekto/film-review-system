@@ -14,6 +14,7 @@ export const API_FILM_GET = "/films"; // get
 export const API_FILM_CREATE = "/films"; // post
 export const API_FILM_GET_ONE = "/films"; // get
 export const API_FILM_DELETE = "/films"; // delete
+export const API_FILM_UPDATE = "/films"; // put
 //
 
 // RATING RELATED

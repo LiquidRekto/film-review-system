@@ -131,29 +131,41 @@ export const FilmDetailsPage = () => {
   return finishProcess ? (
     filmDetail ? (
       <>
-        <Box sx={{ display: "flex" }}>
-          <Box sx={{ width: "50%" }}>
-            <img src={filmDetail.thumbnail_path} />
-          </Box>
-          <Box sx={{ width: "50%" }}>
-            <Typography variant="h5">Title:</Typography>
-            <Typography>{filmDetail.title}</Typography>
-            <Typography variant="h5">Description:</Typography>
-            <Typography>{filmDetail.description}</Typography>
-            <Typography variant="h5">Directors:</Typography>
-            <Typography>{filmDetail.director}</Typography>
-          </Box>
-        </Box>
-        <Box sx={{ display: "block" }}>
-          <Typography variant="h4">Leave a rating!</Typography>
-          {!CommonUtils.getUserEmail() ? (
-            <Typography color="error">
-              Please login to use this function.
-            </Typography>
-          ) : (
-            <></>
-          )}
-          <Box>
+        <Grid2 container sx={{ p: 4 }}>
+          {/*First 2 columns */}
+          <Grid2 size={6} sx={{ p: 2 }}>
+            <Box sx={{ width: "25%", height: "50%" }}>
+              <img src={filmDetail.thumbnail_path} />
+            </Box>
+          </Grid2>
+          <Grid2 size={6}>
+            <Box sx={{ width: "50%" }}>
+              <Typography variant="h5">Title:</Typography>
+              <Typography>{filmDetail.title}</Typography>
+              <Typography variant="h5">Description:</Typography>
+              <Typography>{filmDetail.description}</Typography>
+              <Typography variant="h5">Directors:</Typography>
+              <Typography>{filmDetail.director}</Typography>
+            </Box>
+          </Grid2>
+        </Grid2>
+        {/*Large area below */}
+        <Grid2
+          sx={{ p: 4 }}
+          columnSpacing={4}
+          container
+          justifyContent="center"
+          display="flex"
+        >
+          <Grid2 size={6}>
+            <Typography variant="h4">Leave a rating!</Typography>
+            {!CommonUtils.getUserEmail() ? (
+              <Typography color="error">
+                Please login to use this function.
+              </Typography>
+            ) : (
+              <></>
+            )}
             <Rating
               onChange={(e, newVal) =>
                 setRatingSubmitInfo({
@@ -165,9 +177,9 @@ export const FilmDetailsPage = () => {
               value={ratingSubmitInfo.rating_score}
               max={10}
             />
-          </Box>
-          <Box>
+            <br />
             <TextField
+              sx={{ width: "100%" }}
               onChange={(e) =>
                 setRatingSubmitInfo({
                   ...ratingSubmitInfo,
@@ -179,45 +191,59 @@ export const FilmDetailsPage = () => {
               multiline
               rows={4}
             />
-          </Box>
-          <Button
-            disabled={
-              ratingSubmitInfo.rating_score <= 0 ||
-              ratingSubmitInfo.comment.length <= 0 ||
-              !CommonUtils.getUserEmail()
-            }
-            onClick={handleRatingSubmit}
-            variant="contained"
-            loading={!finishSubmitProcess}
-          >
-            Submit
-          </Button>
-        </Box>
-        <Box sx={{ width: "100%" }}>
-          <Grid2 container spacing={4}>
-            {finishRatingProcess ? (
-              filmRatingList.map((val) => {
-                return (
-                  <Grid2 size={12}>
-                    <RatingBlockComponent rating={val} />
-                  </Grid2>
-                );
-              })
-            ) : (
-              <CircularProgress />
-            )}
+            <Button
+              sx={{ my: 2 }}
+              disabled={
+                ratingSubmitInfo.rating_score <= 0 ||
+                ratingSubmitInfo.comment.length <= 0 ||
+                !CommonUtils.getUserEmail()
+              }
+              onClick={handleRatingSubmit}
+              variant="contained"
+              loading={!finishSubmitProcess}
+            >
+              Submit
+            </Button>
           </Grid2>
-          {finishRatingProcess ? (
-            <Pagination
-              onChange={handlePageChange}
-              page={currentPage}
-              count={totalPages}
-              color="primary"
-            />
-          ) : (
-            <></>
-          )}
-        </Box>
+
+          <Grid2 size={6} justifyContent="center">
+            <Grid2 container spacing={6}>
+              {finishRatingProcess ? (
+                filmRatingList.length > 0 ? (
+                  filmRatingList.map((val) => {
+                    return (
+                      <Grid2 size={12}>
+                        <RatingBlockComponent rating={val} />
+                      </Grid2>
+                    );
+                  })
+                ) : (
+                  <Typography
+                    variant="h3"
+                    sx={{ fontStyle: "italic", color: "gray" }}
+                  >
+                    No ratings available
+                  </Typography>
+                )
+              ) : (
+                <CircularProgress />
+              )}
+            </Grid2>
+            <Box display="flex" justifyContent="center">
+              {finishRatingProcess ? (
+                <Pagination
+                  sx={{ py: 2 }}
+                  onChange={handlePageChange}
+                  page={currentPage}
+                  count={totalPages}
+                  color="primary"
+                />
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Grid2>
+        </Grid2>
       </>
     ) : (
       <Typography variant="h3">NOT FOUND</Typography>

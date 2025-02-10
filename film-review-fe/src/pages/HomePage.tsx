@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const HomePage = () => {
-  return <div>HomeDashboardPage</div>;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/films");
+  }, []);
+
+  return <div></div>;
 };
 
 export default HomePage;

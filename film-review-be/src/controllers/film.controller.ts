@@ -38,6 +38,34 @@ export class FilmController {
     }
   }
 
+  async updateFilm(req: Request, res: Response) {
+    try {
+      const file = req.file;
+      const { id } = req.params;
+      if (isNaN(Number(id))) {
+        throw new APIError("Invalid film id", API_R_400);
+      }
+      let filePath;
+      if (file) {
+        filePath = "/api/uploads/" + file.filename;
+      }
+      const { title, description, director } = req.body;
+      const filmData: Partial<Film> = {
+        title: title,
+        description: description,
+        director: director,
+        updatedAt: new Date(),
+      };
+      if (file) filmData.thumbnail_path = filePath;
+      const result = await this.filmService.updateFilm(Number(id), filmData);
+      return res
+        .status(API_R_200)
+        .json(new APIResponse("Film created successfully", result));
+    } catch (e) {
+      handleError(res, e);
+    }
+  }
+
   async getAllFilms(req: Request, res: Response) {
     const { offset, limit, order, orderBy, searchQuery, searchBy } = req.query;
     try {

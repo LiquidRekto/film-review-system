@@ -1,10 +1,12 @@
 import { IFilm } from "@/interfaces/film";
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
   CardMedia,
+  Rating,
   Typography,
 } from "@mui/material";
 import { FC } from "react";
@@ -23,7 +25,10 @@ const FilmBlockComponent: FC<Props> = (props) => {
   };
 
   return (
-    <Card sx={{ maxWidth: 300 }}>
+    <Card
+      elevation={4}
+      sx={{ maxWidth: 300, height: 600, backgroundColor: "gold" }}
+    >
       <CardMedia
         sx={{ height: 400, maxWidth: 300 }}
         image={props.film.thumbnail_path}
@@ -36,6 +41,18 @@ const FilmBlockComponent: FC<Props> = (props) => {
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {props.film.description}
         </Typography>
+        {props.film.avg_rating ? (
+          <Box display="flex" alignContent="center">
+            <Rating value={1} readOnly max={1} />
+            <Typography sx={{ fontSize: "1.1em" }}>
+              {Number(props.film.avg_rating).toFixed(1)}/10
+            </Typography>
+          </Box>
+        ) : (
+          <Typography sx={{ fontStyle: "italic", color: "gray" }}>
+            No ratings
+          </Typography>
+        )}
       </CardContent>
       <CardActions>
         <Button

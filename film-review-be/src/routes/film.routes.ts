@@ -23,6 +23,15 @@ router.post(
   }
 );
 
+router.put(
+  "/:id",
+  authorize(["admin"]),
+  upload.single("thumbnail"),
+  (req: Request, res: Response) => {
+    filmController.updateFilm(req, res);
+  }
+);
+
 router.delete("/:id", authorize(["admin"]), (req: Request, res: Response) => {
   filmController.deleteFilm(req, res);
 });

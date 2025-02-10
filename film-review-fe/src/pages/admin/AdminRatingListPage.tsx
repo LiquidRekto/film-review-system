@@ -79,6 +79,7 @@ const AdminRatingListPage = () => {
       apiCalls.push(RatingService.deleteRating(v));
     });
     Promise.all(apiCalls).then(() => {
+      handleGetRatingList();
       setConfirmMultiDeleteOpen(false);
     });
     await handleGetRatingList();
@@ -118,8 +119,9 @@ const AdminRatingListPage = () => {
 
   return (
     <>
-      <Typography variant="h1"> Rating List</Typography>
+      <Typography variant="h3"> Rating List</Typography>
       <Button
+        sx={{ my: 2 }}
         onClick={() => setConfirmMultiDeleteOpen(true)}
         disabled={selectedRows.length <= 0}
         variant="contained"
@@ -146,7 +148,7 @@ const AdminRatingListPage = () => {
               },
             },
           }}
-          pageSizeOptions={[5]}
+          pageSizeOptions={[5, 10, 25]}
           onRowSelectionModelChange={(newSelection) => {
             setSelectedRows(newSelection); // Stores selected row IDs
           }}

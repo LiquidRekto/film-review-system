@@ -5,4 +5,5 @@ export interface IFilm {
   director: string;
   thumbnail_path: string;
   trailerUrl: string;
+  avg_rating?: number;
 }

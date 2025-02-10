@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,13 +10,11 @@ import {
 } from "@mui/material";
 import FileUploader from "./common/FileUploader";
 
-const AddFilmDialogComponent = ({ open, onClose, onSubmit }) => {
-  const [film, setFilm] = useState({
-    title: "",
-    description: "",
-    director: "",
-    thumbnail: null, // File object
-  });
+const FilmEditDialogComponent = ({ film_ip, open, onClose, onSubmit }) => {
+  const [film, setFilm] = useState(film_ip);
+  useEffect(() => {
+    setFilm(film_ip);
+  }, [film_ip]);
 
   const [fileName, setFileName] = useState("");
 
@@ -32,6 +30,7 @@ const AddFilmDialogComponent = ({ open, onClose, onSubmit }) => {
 
   const handleSubmit = () => {
     const formData = new FormData();
+    formData.append("id", film.id);
     formData.append("title", film.title);
     formData.append("description", film.description);
     formData.append("director", film.director);
@@ -44,7 +43,7 @@ const AddFilmDialogComponent = ({ open, onClose, onSubmit }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Add New Film</DialogTitle>
+      <DialogTitle>Edit Film</DialogTitle>
       <DialogContent>
         <TextField
           fullWidth
@@ -82,11 +81,11 @@ const AddFilmDialogComponent = ({ open, onClose, onSubmit }) => {
           Cancel
         </Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
-          Add Film
+          Save Film
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default AddFilmDialogComponent;
+export default FilmEditDialogComponent;

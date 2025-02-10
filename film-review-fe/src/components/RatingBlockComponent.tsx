@@ -1,4 +1,5 @@
 import { IFilmRating } from "@/interfaces/rating";
+import { CommonUtils } from "@/utils/common.utils";
 import {
   Card,
   CardContent,
@@ -14,7 +15,13 @@ interface Props {
 
 const RatingBlockComponent: FC<Props> = (props) => {
   return (
-    <Card sx={{ width: "80%" }}>
+    <Card
+      sx={
+        CommonUtils.getUserFullName() === props.rating.full_name
+          ? { backgroundColor: "rgb(255,230,116)" }
+          : {}
+      }
+    >
       <CardContent>
         <Typography variant="h5">{props.rating.full_name}</Typography>
         <Typography variant="h6" style={{ fontStyle: "italic" }}>

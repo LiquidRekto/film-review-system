@@ -44,7 +44,7 @@ const NavBarComponent = () => {
         </Button>
         <Typography sx={{ flexGrow: 1 }}></Typography>
         {user ? (
-          <Typography sx={{ fontStyle: "italic" }}>
+          <Typography sx={{ fontStyle: "italic", mr: 4 }}>
             Welcome back, {CommonUtils.getUserFullName()}
           </Typography>
         ) : (
@@ -53,18 +53,28 @@ const NavBarComponent = () => {
           </Button>
         )}
         {role === "admin" ? (
-          <Button onClick={handleAdmin} color="inherit">
+          <Button sx={{ mx: 1 }} onClick={handleAdmin} color="inherit">
             ADMIN DASHBOARD
           </Button>
         ) : (
           <></>
         )}
         {user ? (
-          <Button onClick={handleLogout} variant="contained" color="inherit">
+          <Button
+            sx={{ ml: 1 }}
+            onClick={handleLogout}
+            variant="contained"
+            color="error"
+          >
             Logout
           </Button>
         ) : (
-          <Button onClick={() => navigate("/auth/login")} color="inherit">
+          <Button
+            sx={{ ml: 1 }}
+            onClick={() => navigate("/auth/login")}
+            variant="contained"
+            color="warning"
+          >
             Login
           </Button>
         )}

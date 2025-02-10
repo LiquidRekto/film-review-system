@@ -6,6 +6,7 @@ import {
   API_FILM_DELETE,
   API_FILM_GET,
   API_FILM_GET_ONE,
+  API_FILM_UPDATE,
 } from "@/constants/api-endpoints";
 import { IAccountLogin, IAccountRegister } from "@/interfaces/auth";
 import { IRecordFilter } from "@/interfaces/pagination";
@@ -19,6 +20,18 @@ export class FilmService extends BaseService {
         { auth: true },
         "multipart/form-data"
       ).post(API_ENV.MAIN + API_FILM_CREATE, data);
+      return response;
+    } catch (error) {
+      return (error as AxiosError).response;
+    }
+  }
+
+  static async updateFilm(film_id: number, data: FormData) {
+    try {
+      const response = await this.request(
+        { auth: true },
+        "multipart/form-data"
+      ).put(API_ENV.MAIN + `${API_FILM_UPDATE}/${film_id}`, data);
       return response;
     } catch (error) {
       return (error as AxiosError).response;
