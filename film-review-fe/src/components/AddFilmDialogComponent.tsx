@@ -6,7 +6,9 @@ import {
   DialogActions,
   TextField,
   Button,
+  Typography,
 } from "@mui/material";
+import FileUploader from "./common/FileUploader";
 
 const AddFilmDialogComponent = ({ open, onClose, onSubmit }) => {
   const [film, setFilm] = useState({
@@ -16,12 +18,15 @@ const AddFilmDialogComponent = ({ open, onClose, onSubmit }) => {
     thumbnail: null, // File object
   });
 
+  const [fileName, setFileName] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFilm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
+    setFileName(e.target.files[0].name);
     setFilm((prev) => ({ ...prev, thumbnail: e.target.files[0] }));
   };
 
@@ -67,7 +72,8 @@ const AddFilmDialogComponent = ({ open, onClose, onSubmit }) => {
           value={film.director}
           onChange={handleChange}
         />
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <Typography>Film thumbnail image</Typography>
+        <FileUploader fileChange={handleFileChange} fileName={fileName} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">

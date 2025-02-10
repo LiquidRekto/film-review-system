@@ -39,17 +39,19 @@ export const AdminDashboardPage = () => {
       flex: 1,
     },
     {
-      field: "thumbnail",
+      field: "thumbnail_path",
       headerName: "Film thumbnail image ",
       description: "Film image",
       flex: 1,
-      renderCell: (params) => (
-        <img
-          src={params.value}
-          alt="Avatar"
-          style={{ width: "50%", height: 40, borderRadius: "50%" }}
-        />
-      ),
+      renderCell: (params) => {
+        return (
+          <img
+            src={params.value}
+            alt="Avatar"
+            style={{ width: "50%", height: 40, borderRadius: "50%" }}
+          />
+        );
+      },
     },
     {
       field: "actions",
@@ -66,24 +68,6 @@ export const AdminDashboardPage = () => {
   ];
 
   const [filmRows, setFilmRows] = useState([]);
-
-  const rows = [
-    {
-      id: 1,
-      title: "My FIlm",
-      description: "ABCXYZ",
-      director: "Bob Smith",
-      thumbnail: "/landscape-placeholder.svg",
-    },
-    { id: 2, lastName: "Lannister", firstName: "Cer", age: 31 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 31 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 11 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
 
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [editFilmOpen, setEditFilmOpen] = useState(false);
@@ -102,12 +86,14 @@ export const AdminDashboardPage = () => {
     await handleGetFilmList();
   };
 
-  const handleDeleteConfirm = () => {
-    setConfirmDeleteOpen(false);
-  };
-
-  const handleAddFilm = (data) => {
+  const handleAddFilm = async (data) => {
     console.log(data);
+    const res = (await FilmService.createFilm(data)) as AxiosResponse;
+    if (res.status === API_R_200) {
+      console.log(res.data);
+    } else {
+      console.log("fail");
+    }
   };
 
   const handleGetFilmList = async () => {

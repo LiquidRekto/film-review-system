@@ -2,6 +2,7 @@ import {
   API_ACCOUNT_LOG_IN,
   API_ACCOUNT_REGISTER,
   API_ENV,
+  API_FILM_CREATE,
   API_FILM_DELETE,
   API_FILM_GET,
   API_FILM_GET_ONE,
@@ -12,6 +13,18 @@ import { BaseService } from "@/services/base.service";
 import { AxiosError } from "axios";
 
 export class FilmService extends BaseService {
+  static async createFilm(data: FormData) {
+    try {
+      const response = await this.request(
+        { auth: true },
+        "multipart/form-data"
+      ).post(API_ENV.MAIN + API_FILM_CREATE, data);
+      return response;
+    } catch (error) {
+      return (error as AxiosError).response;
+    }
+  }
+
   static async getFilmById(id: number) {
     try {
       const response = await this.request({ auth: false }).get(

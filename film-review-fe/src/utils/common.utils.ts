@@ -37,4 +37,15 @@ export class CommonUtils {
       return null;
     }
   }
+
+  static getUserFullName(): string | null {
+    try {
+      const tokenInfoStr = StorageUtils.getItem("tokenInfo");
+      const tokenInfo = JSON.parse(tokenInfoStr);
+      const decodedAccessInfo = jwtDecode(tokenInfo.token) as IAccountInfo;
+      return `${decodedAccessInfo.first_name} ${decodedAccessInfo.last_name}`;
+    } catch (e) {
+      return null;
+    }
+  }
 }

@@ -43,9 +43,15 @@ const NavBarComponent = () => {
           FILMS
         </Button>
         <Typography sx={{ flexGrow: 1 }}></Typography>
-        <Button onClick={() => navigate("/auth/register")} color="inherit">
-          Register
-        </Button>
+        {user ? (
+          <Typography sx={{ fontStyle: "italic" }}>
+            Welcome back, {CommonUtils.getUserFullName()}
+          </Typography>
+        ) : (
+          <Button onClick={() => navigate("/auth/register")} color="inherit">
+            Register
+          </Button>
+        )}
         {role === "admin" ? (
           <Button onClick={handleAdmin} color="inherit">
             ADMIN DASHBOARD
@@ -64,7 +70,6 @@ const NavBarComponent = () => {
         )}
         <Box></Box>
         <IconButton></IconButton>
-        <span className="fi fi-vn"></span>
       </Toolbar>
     </AppBar>
   );

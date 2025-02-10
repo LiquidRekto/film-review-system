@@ -15,12 +15,17 @@ export class FilmController {
 
   async createFilm(req: Request, res: Response) {
     try {
-      const { title, description, director, thumbnail_path } = req.body;
+      const file = req.file;
+      if (!file) {
+        throw new APIError("Please upload a file", API_R_400);
+      }
+      const filePath = "/api/uploads/" + file.filename;
+      const { title, description, director } = req.body;
       const filmData: Partial<Film> = {
         title: title,
         description: description,
         director: director,
-        thumbnail_path: thumbnail_path,
+        thumbnail_path: filePath,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
