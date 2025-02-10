@@ -1,3 +1,4 @@
+import { ProtectedRouteComponent } from "@/components/common/ProtectedRouteComponent";
 import SideBarComponent from "@/components/SideBarComponent";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router";
@@ -6,7 +7,7 @@ const AdminLayout = (props) => {
   const DRAWER_WIDTH = 240;
 
   return (
-    <>
+    <ProtectedRouteComponent>
       <Box
         component="nav"
         sx={{
@@ -18,7 +19,7 @@ const AdminLayout = (props) => {
           <Outlet />
         </Box>
       </Box>
-    </>
+    </ProtectedRouteComponent>
   );
 };
 

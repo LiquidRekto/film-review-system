@@ -54,7 +54,6 @@ const LoginPage = () => {
       setFinishProcess(true);
       return;
     }
-    console.log(res.data.data);
     StorageUtils.setItem("tokenInfo", JSON.stringify(res.data.data));
     setFinishProcess(true);
     navigate("/films");

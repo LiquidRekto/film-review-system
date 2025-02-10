@@ -5,6 +5,7 @@ import {
   AllowNull,
   Column,
   DataType,
+  HasMany,
   Model,
   Table,
 } from "sequelize-typescript";
@@ -55,4 +56,8 @@ export class User extends Model {
 
   @Column({ type: DataType.ENUM("admin", "user"), defaultValue: "user" })
   role!: string;
+
+  // Association: User has many Ratings
+  @HasMany(() => Rating)
+  ratings!: Rating[];
 }

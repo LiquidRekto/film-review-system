@@ -1,7 +1,9 @@
 import RatingBlockComponent from "@/components/RatingBlockComponent";
 import { API_R_200 } from "@/constants/error-codes";
 import { IFilm } from "@/interfaces/film";
+import { IFilmRating } from "@/interfaces/rating";
 import { FilmService } from "@/services/film.service";
+import { RatingService } from "@/services/rating.service";
 import {
   Box,
   Button,
@@ -21,6 +23,7 @@ export const FilmDetailsPage = () => {
 
   const [finishProcess, setFinishProcess] = useState(false);
   const [filmDetail, setFilmDetail] = useState<IFilm | null>(null);
+  const [filmRatingList, setFilmRatingList] = useState<IFilmRating[]>([]);
 
   const handleGetFilm = async () => {
     setFinishProcess(false);
@@ -30,7 +33,25 @@ export const FilmDetailsPage = () => {
     }
     const res = (await FilmService.getFilmById(Number(id))) as AxiosResponse;
     if (res.status === API_R_200) {
+      console.log(res.data);
       setFilmDetail(res.data);
+    } else {
+      console.error("Error while fetching");
+    }
+    setFinishProcess(true);
+  };
+
+  const handleGetFilmRatings = async () => {
+    setFinishProcess(false);
+    if (isNaN(Number(id))) {
+      setFinishProcess(true);
+      return;
+    }
+    const res = (await RatingService.getRatingsByFilm(
+      Number(id)
+    )) as AxiosResponse;
+    if (res.status === API_R_200) {
+      setFilmDetail(res.data.data);
     }
     setFinishProcess(true);
   };
@@ -44,7 +65,7 @@ export const FilmDetailsPage = () => {
       <>
         <Box sx={{ display: "flex" }}>
           <Box sx={{ width: "50%" }}>
-            <img src={filmDetail.thumbnailPath} />
+            <img src={filmDetail.thumbnail_path} />
             <Box>
               <iframe
                 width="560"
@@ -87,9 +108,7 @@ export const FilmDetailsPage = () => {
             Submit
           </Button>
         </Box>
-        <Box>
-          <RatingBlockComponent />
-        </Box>
+        <Box></Box>
       </>
     ) : (
       <Typography variant="h3">NOT FOUND</Typography>

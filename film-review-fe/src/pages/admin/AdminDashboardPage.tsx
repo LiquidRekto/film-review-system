@@ -57,12 +57,6 @@ export const AdminDashboardPage = () => {
           <IconButton color="primary" onClick={() => handleEdit(params.row.id)}>
             <EditIcon />
           </IconButton>
-          <IconButton
-            color="secondary"
-            onClick={() => handleDelete(params.row.id)}
-          >
-            <DeleteIcon />
-          </IconButton>
         </>
       ),
     },

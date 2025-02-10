@@ -13,6 +13,10 @@ router.get("/", (req: Request, res: Response) => {
   filmController.getAllFilms(req, res);
 });
 
+router.post("/", authorize(["admin"]), (req: Request, res: Response) => {
+  filmController.getAllFilms(req, res);
+});
+
 router.delete("/:id", authorize(["admin"]), (req: Request, res: Response) => {
   filmController.deleteFilm(req, res);
 });

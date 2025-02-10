@@ -10,6 +10,7 @@ import AuthLayout from "@/layouts/AuthLayout";
 import AdminLayout from "@/layouts/AdminLayout";
 import ListFilmPage from "./pages/ListFilmPage";
 import { FilmDetailsPage } from "./pages/FilmDetailsPage";
+import NotFoundPage from "./pages/common/NotFoundPage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboardPage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -4,6 +4,7 @@ import {
   Model,
   DataType,
   ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { User } from "./user";
 import { Film } from "./film";
@@ -30,4 +31,11 @@ export class Rating extends Model {
 
   @Column({ type: DataType.TEXT })
   comment!: string;
+
+  // Association: Rating belongs to User
+  @BelongsTo(() => User)
+  user!: User;
+
+  @BelongsTo(() => Film)
+  films!: Film;
 }

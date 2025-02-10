@@ -6,7 +6,7 @@ export interface IRatingSubmit {
 }
 
 export interface IFilmRating {
-  userName: number;
+  user_name: number;
   rating: number;
   comment: string;
 }

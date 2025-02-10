@@ -4,8 +4,9 @@ import {
   Model,
   DataType,
   ForeignKey,
+  HasMany,
 } from "sequelize-typescript";
-import { User } from "./user";
+import { Rating } from "./rating";
 
 @Table({ tableName: "films", timestamps: true })
 export class Film extends Model {
@@ -23,4 +24,8 @@ export class Film extends Model {
 
   @Column({ type: DataType.STRING })
   thumbnail_path!: string;
+
+  // Association: User has many Ratings
+  @HasMany(() => Rating)
+  ratings!: Rating[];
 }

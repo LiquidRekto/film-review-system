@@ -3,6 +3,6 @@ export interface IFilm {
   title: string;
   description: string;
   director: string;
-  thumbnailPath: string;
+  thumbnail_path: string;
   trailerUrl: string;
 }

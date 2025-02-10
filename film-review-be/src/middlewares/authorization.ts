@@ -6,7 +6,6 @@ import { NextFunction, Request, Response } from "express";
 
 export const authorize = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.headers.authorization);
     const token = req.header("Authorization")?.split(" ")[1]; // Extract Bearer Token
     if (!token) {
       res.status(API_R_401).json({ message: "Access Denied" });

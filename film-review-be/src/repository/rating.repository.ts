@@ -1,6 +1,7 @@
 import { IPageRecords, IRecordFilter } from "@/interfaces/pagination";
 import { Film } from "@/models/film";
 import { Rating } from "@/models/rating";
+import { User } from "@/models/user";
 import { sequelize } from "@/utils/db";
 import { FindAndCountOptions, Op, Order, WhereOptions } from "sequelize";
 
@@ -36,16 +37,6 @@ export class RatingRepository {
     filter: IRecordFilter
   ): Promise<IPageRecords<Rating>> {
     // No filter queries (searchBy, searchQuery) for ratings
-    const options: Omit<FindAndCountOptions<any>, "group"> | undefined = {
-      limit: filter.limit,
-      offset: filter.offset,
-      order: [[filter.orderBy!, filter.order!]],
-      where: {
-        film_id: { [Op.eq]: film_id },
-        user_id: { [Op.eq]: user_id },
-      },
-    };
-
     const whereOp: WhereOptions<any> = {
       film_id: { [Op.eq]: film_id },
       user_id: { [Op.eq]: user_id },
@@ -56,6 +47,9 @@ export class RatingRepository {
     const { count, rows } = await Rating.findAndCountAll({
       limit: filter.limit,
       offset: filter.offset,
+      include: {
+        model: User,
+      },
       order: [[filter.orderBy!, filter.order!]],
       where: whereOp,
     });

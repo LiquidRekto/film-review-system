@@ -11,6 +11,8 @@ export const API_ACCOUNT_REGISTER = "/auth/register"; // post
 
 // FILM RELATED
 export const API_FILM_GET = "/films"; // get
+export const API_FILM_GET_ONE = "/films"; // get
+export const API_FILM_DELETE = "/films"; // delete
 //
 
 // RATING RELATED

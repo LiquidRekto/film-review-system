@@ -1,6 +1,7 @@
 import { API_R_200, API_R_400, API_R_404 } from "@/constants/res-codes";
 import { IRecordFilter } from "@/interfaces/pagination";
 import { APIError, APIResponse } from "@/interfaces/response";
+import { Film } from "@/models/film";
 import { FilmService } from "@/services/film.service";
 import { handleError } from "@/utils/err-handler";
 import { Request, Response } from "express";
@@ -10,6 +11,26 @@ export class FilmController {
 
   constructor() {
     this.filmService = new FilmService();
+  }
+
+  async createFilm(req: Request, res: Response) {
+    try {
+      const { title, description, director, thumbnail_path } = req.body;
+      const filmData: Partial<Film> = {
+        title: title,
+        description: description,
+        director: director,
+        thumbnail_path: thumbnail_path,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const result = await this.filmService.createFilm(filmData);
+      return res
+        .status(API_R_200)
+        .json(new APIResponse("Film created successfully", result));
+    } catch (e) {
+      handleError(res, e);
+    }
   }
 
   async getAllFilms(req: Request, res: Response) {

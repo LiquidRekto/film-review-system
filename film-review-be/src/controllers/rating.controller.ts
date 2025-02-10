@@ -1,6 +1,7 @@
 import { API_R_200, API_R_400 } from "@/constants/res-codes";
 import { IRecordFilter } from "@/interfaces/pagination";
 import { APIError, APIResponse } from "@/interfaces/response";
+import { Rating } from "@/models/rating";
 import RatingService from "@/services/rating.service";
 import { handleError } from "@/utils/err-handler";
 import { Request, Response } from "express";
@@ -10,6 +11,24 @@ export class RatingController {
 
   constructor() {
     this.ratingService = new RatingService();
+  }
+
+  async createRating(req: Request, res: Response) {
+    try {
+      const { user_id, film_id, rating_score, comment } = req.body;
+      const dat: Partial<Rating> = {
+        user_id: user_id,
+        film_id: film_id,
+        rating_score: rating_score,
+        comment: comment,
+      };
+      const result = await this.ratingService.createRating(dat);
+      res
+        .status(API_R_200)
+        .json(new APIResponse("Rating created successfully", result));
+    } catch (e) {
+      handleError(res, e);
+    }
   }
 
   async getAllRatings(req: Request, res: Response) {
@@ -60,6 +79,7 @@ export class RatingController {
       if (isNaN(Number(id))) {
         throw new APIError("id is not a number", API_R_400);
       }
+
       await this.ratingService.deleteRating(Number(id));
       return res
         .status(API_R_200)

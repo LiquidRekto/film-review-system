@@ -32,10 +32,18 @@ const NavBarComponent = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          My App
+        <Typography
+          onClick={() => navigate("/")}
+          variant="h6"
+          sx={{ cursor: "pointer" }}
+        >
+          FimRiViu
         </Typography>
-        {role ? (
+        <Button onClick={() => navigate("/films")} color="inherit">
+          FILMS
+        </Button>
+        <Typography sx={{ flexGrow: 1 }}></Typography>
+        {role === "admin" ? (
           <Button onClick={handleAdmin} color="inherit">
             ADMIN DASHBOARD
           </Button>
