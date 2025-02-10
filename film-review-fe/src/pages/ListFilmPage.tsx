@@ -28,7 +28,7 @@ const ListFilmPage = () => {
   const PAGE_RECORDS = 8;
 
   const [filters, setFilters] = useState({
-    offset: (currentPage - 1) * PAGE_RECORDS,
+    offset: 0,
     limit: PAGE_RECORDS,
     order: "ASC",
     orderBy: "createdAt",
@@ -49,6 +49,7 @@ const ListFilmPage = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
+    setFilters({ ...filters, offset: (value - 1) * PAGE_RECORDS });
     setCurrentPage(value);
   };
 
